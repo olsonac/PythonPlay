@@ -1,6 +1,7 @@
 ---
 jupyter:
   jupytext:
+    formats: Rmd,ipynb
     split_at_heading: true
     text_representation:
       extension: .Rmd
@@ -24,6 +25,8 @@ thanks.  If you make a new version of this original, please note that this
 exercise has a [CC-BY-NC
 license](http://creativecommons.org/licenses/by-nc/4.0/); remember to give
 attribution to the original authors from the repository above.
+
+Some stuff added
 
 
 ## Getting started

@@ -1,15 +1,14 @@
 ---
 jupyter:
   jupytext:
-    formats: Rmd,ipynb
     split_at_heading: true
     text_representation:
       extension: .Rmd
       format_name: rmarkdown
-      format_version: '1.2'
-      jupytext_version: 1.12.0
+      format_version: '1.1'
+      jupytext_version: 1.2.4
   kernelspec:
-    display_name: Python 3 (ipykernel)
+    display_name: Python 3
     language: python
     name: python3
 ---
@@ -26,8 +25,6 @@ exercise has a [CC-BY-NC
 license](http://creativecommons.org/licenses/by-nc/4.0/); remember to give
 attribution to the original authors from the repository above.
 
-Some stuff added
-
 
 ## Getting started
 
@@ -35,7 +32,6 @@ This exercise gives you some hands-on practice with linear regression.
 
 ```{python}
 # Run this cell, but please don't change it.
-# !pip install okpy
 
 # These lines import the Numpy and Pandas modules.
 import numpy as np
@@ -98,8 +94,7 @@ that, we should look at the data.
 Make a scatter plot of the data.  It's conventional to put the column we will try to predict on the vertical axis and the other column on the horizontal axis.
 
 ```{python}
-#<- ...
-faithful.plot.scatter('duration', 'wait')
+...
 ```
 
 ## Question 2
@@ -134,24 +129,13 @@ containing the eruption durations and waiting times in standard units.
 (standard units)"`.
 
 ```{python for_assignment_type=student}
-#<- duration_mean = ...
-#<- duration_std = ...
-#<- wait_mean = ...
-#<- wait_std = ...
-duration = faithful['duration']
-wait = faithful['wait']
-duration_mean = np.mean(duration)
-duration_std = np.std(duration)
-wait_mean = np.mean(wait)
-wait_std = np.std(wait)
-
-#<--
+duration_mean = ...
+duration_std = ...
+wait_mean = ...
+wait_std = ...
 faithful_standard = pd.DataFrame()
-#<- faithful_standard["duration (standard units)"] = ...
-faithful_standard["duration (standard units)"] = (duration - duration_mean) / duration_std
-#<- faithful_standard["wait (standard units)"] = ...
-faithful_standard["wait (standard units)"] = (wait - wait_mean) / wait_std
-#<->
+faithful_standard["duration (standard units)"] = ...
+faithful_standard["wait (standard units)"] = ...
 # Show the new data frame.
 faithful_standard
 ```
@@ -166,8 +150,7 @@ ok.grade('q1_3');
 Plot the data again, but this time in standard units.
 
 ```{python}
-#<- ...
-faithful_standard.plot.scatter('duration (standard units)', 'wait (standard units)')
+...
 ```
 
 You'll notice that this plot looks exactly the same as the last one!
@@ -195,10 +178,7 @@ correlation between eruption duration and waiting time in this dataset?
 *Compute* the correlation `r`.  *Hint:* Use `faithful_standard`. The Correlation section in the textbook explains how to do this.
 
 ```{python}
-#<- r = ... 
-r = np.mean(faithful_standard['duration (standard units)'] *
-            faithful_standard['wait (standard units)'])
-#<->
+r = ... 
 r
 ```
 
@@ -259,11 +239,7 @@ from scipy.optimize import minimize
 Calculate the least-squares intercept and slope for the *original* duration and wait times (not standardized):
 
 ```{python}
-#<- intercept, slope = ...
-intercept, slope = minimize(ss_any_line, [30, 10],
-                            args=(faithful['duration'],
-                                  faithful['wait'])).x
-#<->
+intercept, slope = ...
 intercept, slope
 ```
 
@@ -288,12 +264,8 @@ and for an eruption that lasts 5 minutes.
 <!-- #endregion -->
 
 ```{python}
-#<- two_minute_predicted_waiting_time = ...
-two_minute_predicted_waiting_time = intercept + slope * 2
-#<- five_minute_predicted_waiting_time = ...
-five_minute_predicted_waiting_time = intercept + slope * 5
-
-#<->
+two_minute_predicted_waiting_time = ...
+five_minute_predicted_waiting_time = ...
 # Here is a helper function to print out your predictions
 # (you don't need to modify it):
 def print_prediction(duration, predicted_waiting_time):
@@ -328,9 +300,7 @@ are.)  Put these numbers into a new variable called
 loop; use array arithmetic instead.
 
 ```{python}
-#<- faithful_predictions = ...
-faithful_predictions = intercept + slope * faithful['duration']
-#<->
+faithful_predictions = ...
 faithful_predictions
 ```
 
@@ -352,16 +322,11 @@ as a new column called `"residual"`
 loop.
 
 ```{python}
-#<-
 # Make a copy of the original table to start.
 faithful_residuals = faithful.copy()
 # Fill in the new column.
-#<-
-#<- residuals = ...
-residuals = faithful['wait'] - faithful_predictions
-#<- faithful_residuals...
-faithful_residuals['residual'] = residuals
-#<->
+residuals = ...
+faithful_residuals...
 faithful_residuals.head()
 ```
 
@@ -412,14 +377,9 @@ this line, what is the predicted waiting time for an eruption that lasts
 0 minutes?  2.5 minutes?  An hour?
 
 ```{python}
-#<- zero_minute_predicted_waiting_time = ...
-zero_minute_predicted_waiting_time = intercept
-#<- two_point_five_minute_predicted_waiting_time = ...
-two_point_five_minute_predicted_waiting_time = intercept + slope * 2.5
-#<- hour_predicted_waiting_time = ...
-hour_predicted_waiting_time = intercept * slope * 60
-
-#<->
+zero_minute_predicted_waiting_time = ...
+two_point_five_minute_predicted_waiting_time = ...
+hour_predicted_waiting_time = ...
 print_prediction(0, zero_minute_predicted_waiting_time)
 print_prediction(2.5, two_point_five_minute_predicted_waiting_time)
 print_prediction(60, hour_predicted_waiting_time)
@@ -470,20 +430,9 @@ above 3. To do so, create a function that computes `r` from a table and pass it
 two different tables of points, `below_3` and `above_3`.
 
 ```{python}
-def reg_coeff(t):
-    """Return the regression coefficient for columns 0 & 1.
-
-    Use .iloc[:, 0] to get values for columns 0, etc.
-    """
-    t_su = standardize(t)
-#<-    ...
-    return np.mean(t_su.iloc[:, 0] * t_su.iloc[:, 1])
-
-#<- below_3 = ...
-below_3 = faithful[faithful['duration'] < 3]
-#<- above_3 = ...
-above_3 = faithful[faithful['duration'] > 3]
-#<->
+   ...
+below_3 = ...
+above_3 = ...
 below_3_r = reg_coeff(below_3)
 above_3_r = reg_coeff(above_3)
 print("For points below 3, r is", below_3_r, "; for points above 3, r is", above_3_r)
@@ -504,17 +453,8 @@ below 3. The second function should use the regression line for all points with
 duration above 3.
 
 ```{python}
-#<- below_3_inter, below_3_slope = ...
-below_3_inter, below_3_slope = minimize(
-    ss_any_line,
-    [30, 10],
-    args=(below_3['duration'], below_3['wait'])).x
-#<- above_3_inter, above_3_slope = ...
-above_3_inter, above_3_slope = minimize(
-    ss_any_line,
-    [30, 10],
-    args=(above_3['duration'], above_3['wait'])).x
-#<->
+below_3_inter, below_3_slope = ...
+above_3_inter, above_3_slope = ...
 
 def wait_below_3(duration):
     return below_3_inter + below_3_slope * duration
@@ -541,18 +481,13 @@ returns the predicted wait time using the appropriate regression line,
 depending on whether the duration is below 3 or greater than (or equal to) 3.
 
 ```{python for_assignment_type=student}
-#<-
 def predict_wait(duration):
     """ Return wait predicted by the matching regression line.
 
     Return wait predicted by the appropriate one of the two regression lines
     above.
     """
-#<-
-#<-    ...
-    if duration < 3:
-        return wait_below_3(duration)
-    return wait_above_3(duration)
+   ...
 ```
 
 ```{python}
